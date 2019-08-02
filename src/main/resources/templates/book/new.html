@@ -49,7 +49,7 @@
                             <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"
                                   class="alert alert-danger"></span>
                             <input id="title" name="title" type="text" class="form-control"
-                                   th:value="${book.title}">
+                                   th:value="${book.title}" required>
                         </div>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                             <label for="isbn">ISBN</label>
                             <span th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"
                                   class="alert alert-danger"></span>
-                            <input id="isbn" name="isbn" type="text" class="form-control" th:value="${book.isbn}">
+                            <input id="isbn" name="isbn" type="text" class="form-control" th:value="${book.isbn}" required>
                         </div>
                     </div>
                     <div class="col-md-6">

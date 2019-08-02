@@ -4,23 +4,26 @@ import edu.mum.cs.cs425.demos.elibrarydemocrudweb.model.Book;
 import edu.mum.cs.cs425.demos.elibrarydemocrudweb.repository.BookRepository;
 import edu.mum.cs.cs425.demos.elibrarydemocrudweb.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService {
 
     @Autowired
+    public BookServiceImpl(BookRepository repository) {
+        this.repository = repository;
+    }
+
     private BookRepository repository;
+    private final Sort sortable = Sort.by("title","isbn");
 
     @Override
     public Iterable<Book> getAllBooks() {
-        return repository.findAll();
+        return repository.findAll(sortable);
     }
 
     @Override
@@ -36,6 +39,21 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteBookById(Integer bookId) {
         repository.deleteById(bookId);
+    }
+
+    @Override
+    public Page<Book> getAllBooksPaged(int nuPage) {
+        return repository.findAll(PageRequest.of(nuPage,5,sortable));
+    }
+
+    @Override
+    public Page<Book> getAllBooksPagedFiltered(int nuPage, String filter) {
+        return repository.findBooksByTitleContainsOrIsbnContainsOrPublisherContains(filter,filter,filter,PageRequest.of(nuPage,5,sortable));
+    }
+
+    @Override
+    public Optional<Book> getBookByISBN(String isbn) {
+        return repository.findBookByIsbn(isbn);
     }
 
 }
